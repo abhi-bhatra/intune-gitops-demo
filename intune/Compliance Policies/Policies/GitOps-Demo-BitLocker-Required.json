@@ -1,0 +1,52 @@
+{
+     "@odata.type": "#microsoft.graph.windows10CompliancePolicy",
+     "roleScopeTagIds": [
+          "0"
+     ],
+     "description": "Devices must have BitLocker enabled - managed via GitOps pipeline",
+     "displayName": "GitOps-Demo-BitLocker-Required",
+     "passwordRequired": true,
+     "passwordBlockSimple": false,
+     "passwordRequiredToUnlockFromIdle": false,
+     "passwordMinimumLength": 8,
+     "passwordRequiredType": "deviceDefault",
+     "requireHealthyDeviceReport": false,
+     "osMinimumVersion": "10.0.19041",
+     "earlyLaunchAntiMalwareDriverEnabled": false,
+     "bitLockerEnabled": true,
+     "secureBootEnabled": false,
+     "codeIntegrityEnabled": false,
+     "storageRequireEncryption": false,
+     "activeFirewallRequired": false,
+     "defenderEnabled": false,
+     "deviceThreatProtectionEnabled": false,
+     "deviceThreatProtectionRequiredSecurityLevel": "unavailable",
+     "configurationManagerComplianceRequired": false,
+     "tpmRequired": false,
+     "validOperatingSystemBuildRanges": [],
+     "scheduledActionsForRule": [
+          {
+               "ruleName": null,
+               "scheduledActionConfigurations": [
+                    {
+                         "gracePeriodHours": 0,
+                         "actionType": "block",
+                         "notificationTemplateId": "00000000-0000-0000-0000-000000000000",
+                         "notificationMessageCCList": []
+                    }
+               ]
+          }
+     ],
+     "assignments": [
+          {
+               "source": "direct",
+               "target": {
+                    "@odata.type": "#microsoft.graph.groupAssignmentTarget",
+                    "deviceAndAppManagementAssignmentFilterId": null,
+                    "deviceAndAppManagementAssignmentFilterType": "none",
+                    "groupName": "Pilot-Ring",
+                    "groupType": "StaticMembership"
+               }
+          }
+     ]
+}

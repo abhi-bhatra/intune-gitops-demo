@@ -11,7 +11,7 @@
      "passwordMinimumLength": 8,
      "passwordRequiredType": "deviceDefault",
      "requireHealthyDeviceReport": false,
-     "osMinimumVersion": "10.0.26100.0",
+     "osMinimumVersion": "10.0.19041",
      "earlyLaunchAntiMalwareDriverEnabled": false,
      "bitLockerEnabled": true,
      "secureBootEnabled": false,

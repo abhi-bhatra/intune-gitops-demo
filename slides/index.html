@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Intune Meets GitOps — Managing Windows Device Policy as Code</title>
+<link rel="stylesheet" href="vendor/reveal.js/dist/reset.css" />
+<link rel="stylesheet" href="vendor/reveal.js/dist/reveal.css" />
+<link rel="stylesheet" href="vendor/reveal.js/dist/plugin/highlight/monokai.css" />
+<link rel="stylesheet" href="theme.css" />
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- 1. TITLE -->
+<section class="title-slide">
+  <div class="brand">Workplace Ninjas India 2026</div>
+  <h1>Intune Meets GitOps</h1>
+  <div class="subtitle">Managing Windows Device Policy as Code</div>
+  <div class="chip-row">
+    <span class="chip">Microsoft Intune</span>
+    <span class="chip">Git</span>
+    <span class="chip">CI / CD</span>
+    <span class="chip">Live Demo on a real tenant</span>
+  </div>
+  <div class="footer-meta">
+    <span>Abhinav Sharma &middot; MVP &amp; Sr. Platform Engineer, KodeKloud</span>
+    <span>Workplace Ninjas India 2026 &middot; 27&ndash;28 Nov 2026</span>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 1–2 min. This is the only slide where you talk before touching anything technical.</p>
+    <p><b>Open with energy, not a bio.</b> Something like: "Everything you'll see in the next hour is real. Real Microsoft 365 tenant, real enrolled Windows 11 laptops, real policy changes. No slideware, no mocked API responses."</p>
+    <p><b>One-line promise:</b> "By the end of this talk you'll watch a bad policy change break a real Windows laptop live on stage — and watch git fix it."</p>
+  </aside>
+</section>
+
+<!-- 2. SPEAKER -->
+<section>
+  <div class="kicker"><span class="dot"></span>Who's talking</div>
+  <div class="cols-2-uneven">
+    <div>
+      <h2>Abhinav Sharma</h2>
+      <p style="font-size:0.75em; margin-top:-6px;">Microsoft MVP &middot; Sr. Platform Engineer @ KodeKloud</p>
+      <div class="accent-bar"></div>
+      <div class="chip-row">
+        <span class="chip">DevOps</span>
+        <span class="chip">GitOps</span>
+        <span class="chip">Windows Device Management</span>
+        <span class="chip">Microsoft Intune</span>
+      </div>
+    </div>
+    <div class="avatar-ring">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+    </div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 1 min. Keep this tight — the audience wants the demo, not your résumé.</p>
+    <p>Swap the avatar placeholder for a real headshot if you have one (replace the SVG block with an &lt;img&gt;).</p>
+  </aside>
+</section>
+
+<!-- 3. AGENDA -->
+<section>
+  <div class="kicker"><span class="dot"></span>Agenda</div>
+  <h2>What we're covering</h2>
+  <div class="agenda-list">
+    <div class="agenda-item"><div class="agenda-num">1</div><div><h4>The Problem</h4><span>Why clicking through the Intune portal doesn't scale</span></div></div>
+    <div class="agenda-item"><div class="agenda-num">2</div><div><h4>GitOps for Windows</h4><span>Policies as JSON, guardrails, CI plan, CD apply</span></div></div>
+    <div class="agenda-item"><div class="agenda-num">3</div><div><h4>Rings</h4><span>Canary-style rollout for a fleet of laptops</span></div></div>
+    <div class="agenda-item"><div class="agenda-num">4</div><div><h4>Live Demo</h4><span>Break a real policy, watch it fail, git revert, watch it heal</span></div></div>
+    <div class="agenda-item"><div class="agenda-num">5</div><div><h4>Lessons Learned</h4><span>What running this for real actually taught us</span></div></div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 1–2 min.</p>
+    <p>Set expectations: "This talk has one live demo, around 15–20 minutes long, against a real tenant. If something takes 2–3 minutes to propagate on stage, that's expected — I'll explain why while we wait."</p>
+  </aside>
+</section>
+
+<!-- 4. SECTION: THE PROBLEM -->
+<section class="section-divider">
+  <div class="big-number">01</div>
+  <div class="kicker"><span class="dot"></span>Section 01</div>
+  <h2>The Problem</h2>
+  <div class="sub">How Windows device policy gets managed today — and why it doesn't scale past a handful of laptops.</div>
+  <aside class="notes">
+    <p><b>Timing:</b> 30 sec transition slide. Let it breathe, don't rush into the next slide.</p>
+  </aside>
+</section>
+
+<!-- 5. PROBLEM DETAIL -->
+<section>
+  <div class="kicker"><span class="dot"></span>The problem</div>
+  <h2>Sound familiar?</h2>
+  <div class="card-grid-2">
+    <div class="card danger">
+      <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20L12 3z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg></div>
+      <h4>Silent fleet-wide mistakes</h4>
+      <p>One wrong click in the Intune portal can disable BitLocker or block USB storage for every enrolled device — instantly, with no review.</p>
+    </div>
+    <div class="card danger">
+      <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+      <h4>No audit trail</h4>
+      <p>No record of who changed what, or why. "It worked yesterday" is not a root cause.</p>
+    </div>
+    <div class="card danger">
+      <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="16" rx="1"/><rect x="14" y="4" width="7" height="16" rx="1"/></svg></div>
+      <h4>No diff before it ships</h4>
+      <p>There's no "plan" step — you find out what changed by watching devices break, not by reading a diff first.</p>
+    </div>
+    <div class="card danger">
+      <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+      <h4>Rollback is... memory</h4>
+      <p>The only undo button is someone remembering exactly what the settings used to be.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 2–3 min.</p>
+    <p>Anchor each card in something the audience has felt in a Kubernetes/infra context — manual kubectl edits in prod, no PR review, no `kubectl diff`. The point: Windows fleet management today is where infra was before IaC.</p>
+  </aside>
+</section>
+
+<!-- 6. SECTION: ENTER GITOPS -->
+<section class="section-divider">
+  <div class="big-number">02</div>
+  <div class="kicker"><span class="dot"></span>Section 02</div>
+  <h2>Enter GitOps for Windows</h2>
+  <div class="sub">The same workflow you already trust for Kubernetes — applied to Intune device policy instead of pods.</div>
+  <aside class="notes">
+    <p><b>Timing:</b> 30 sec transition.</p>
+  </aside>
+</section>
+
+<!-- 7. CONCEPT MAPPING -->
+<section>
+  <div class="kicker"><span class="dot"></span>Same idea, new domain</div>
+  <h2>If you know GitOps, you already know this</h2>
+  <div class="map-table">
+    <div class="map-row map-head"><div class="map-cell">Kubernetes GitOps</div><div class="map-arrow"></div><div class="map-cell">This pipeline</div></div>
+    <div class="map-row"><div class="map-cell k8s">Deployment manifest (YAML)</div><div class="map-arrow">&#8594;</div><div class="map-cell intune">Compliance policy (JSON)</div></div>
+    <div class="map-row"><div class="map-cell k8s">OPA / Gatekeeper admission control</div><div class="map-arrow">&#8594;</div><div class="map-cell intune">guardrails/validate_policy.py</div></div>
+    <div class="map-row"><div class="map-cell k8s">kubectl diff / terraform plan</div><div class="map-arrow">&#8594;</div><div class="map-cell intune">IntuneCD dry-run (-r)</div></div>
+    <div class="map-row"><div class="map-cell k8s">kubectl apply</div><div class="map-arrow">&#8594;</div><div class="map-cell intune">IntuneCD-startupdate</div></div>
+    <div class="map-row"><div class="map-cell k8s">Canary rollout</div><div class="map-arrow">&#8594;</div><div class="map-cell intune">Pilot-Ring assignment</div></div>
+    <div class="map-row"><div class="map-cell k8s">kubectl rollout undo</div><div class="map-arrow">&#8594;</div><div class="map-cell intune">git revert + re-apply</div></div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 2 min. This is the slide that makes K8s/DevOps engineers lean forward.</p>
+    <p>Say explicitly: "I'm not stretching an analogy here — the architecture is the same loop: declare, validate, apply, observe, revert."</p>
+  </aside>
+</section>
+
+<!-- 8. PIPELINE DIAGRAM -->
+<section>
+  <div class="kicker"><span class="dot"></span>The pipeline</div>
+  <h2>Git commit to device compliance, in 5 steps</h2>
+  <div class="pipeline">
+    <div class="pipeline-node">
+      <div class="node-circle i-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg></div>
+      <h4>Git Commit</h4>
+      <p>Policy change as reviewable JSON, like a Deployment manifest</p>
+    </div>
+    <div class="pipeline-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg></div>
+    <div class="pipeline-node">
+      <div class="node-circle i-cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h4>Guardrail</h4>
+      <p>Policy-as-code check, local — rejects bad shapes before CI starts</p>
+    </div>
+    <div class="pipeline-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg></div>
+    <div class="pipeline-node">
+      <div class="node-circle i-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="16" rx="1"/><rect x="14" y="4" width="7" height="16" rx="1"/></svg></div>
+      <h4>CI Plan</h4>
+      <p>IntuneCD dry-run diffs against the live tenant — no writes yet</p>
+    </div>
+    <div class="pipeline-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg></div>
+    <div class="pipeline-node">
+      <div class="node-circle i-cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 0 1-1-7.9A5 5 0 0 1 16 8a4.5 4.5 0 0 1 1 8.9"/><path d="M12 12v7"/><path d="M9 15l3-3 3 3"/></svg></div>
+      <h4>CD Apply</h4>
+      <p>Merge to main pushes the policy for real, via Microsoft Graph</p>
+    </div>
+    <div class="pipeline-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg></div>
+    <div class="pipeline-node">
+      <div class="node-circle i-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="11" rx="1.5"/><line x1="2" y1="19" x2="22" y2="19"/></svg></div>
+      <h4>Device Reports Back</h4>
+      <p>Compliant / noncompliant status flows back from the real device</p>
+    </div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 2–3 min. This is the backbone diagram — refer back to it mentally during the whole demo.</p>
+    <p>Point out step 2 explicitly: the guardrail never talks to the tenant. It's a pure local check, same mental model as an admission controller.</p>
+  </aside>
+</section>
+
+<!-- 9. CODE SLIDE -->
+<section>
+  <div class="kicker"><span class="dot"></span>Show me the code</div>
+  <h2>The guardrail, in ~10 lines of Python</h2>
+  <div class="terminal-window">
+    <div class="terminal-titlebar">
+      <span class="terminal-dot" style="background:#ff5f56"></span>
+      <span class="terminal-dot" style="background:#ffbd2e"></span>
+      <span class="terminal-dot" style="background:#27c93f"></span>
+      <span class="terminal-filename">guardrails/validate_policy.py</span>
+    </div>
+    <pre><code class="language-python" data-trim data-line-numbers>@rule("Windows compliance policies must enforce a minimum OS build")
+def must_enforce_os_minimum_version(doc, path):
+    if doc.get("@odata.type") == "#microsoft.graph.windows10CompliancePolicy":
+        if not doc.get("osMinimumVersion"):
+            return f"{path}: osMinimumVersion not set"
+    return None</code></pre>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 2 min.</p>
+    <p>Live-code moment (optional): actually run <code>python3 guardrails/validate_policy.py intune</code> in a terminal here instead of just showing the slide, to prove it's real. Full command sequence for this is in DEMO_SCRIPT.md, Act 2.</p>
+  </aside>
+</section>
+
+<!-- 10. SECTION: RINGS -->
+<section class="section-divider">
+  <div class="big-number">03</div>
+  <div class="kicker"><span class="dot"></span>Section 03</div>
+  <h2>Meet the Fleet: Rings</h2>
+  <div class="sub">Two Windows 11 VMs, two rings — the canary deployment pattern, applied to laptops instead of pods.</div>
+  <aside class="notes">
+    <p><b>Timing:</b> 30 sec transition.</p>
+  </aside>
+</section>
+
+<!-- 11. RING DIAGRAM -->
+<section>
+  <div class="kicker"><span class="dot"></span>Blast-radius containment</div>
+  <h2>Pilot-Ring takes the risk first</h2>
+  <div class="ring-wrap">
+    <div class="ring pilot">
+      <div class="ring-label">Pilot-Ring</div>
+      <div class="ring-icon i-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="11" rx="1.5"/><line x1="2" y1="19" x2="22" y2="19"/></svg></div>
+      <div class="ring-caption">VM1 &middot; the canary<br/>new policies land here first</div>
+    </div>
+    <div class="ring-flow">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg>
+      <span>risk flows here first</span>
+    </div>
+    <div class="ring prod">
+      <div class="ring-label">Prod-Ring</div>
+      <div class="ring-icon i-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="11" rx="1.5"/><line x1="2" y1="19" x2="22" y2="19"/></svg></div>
+      <div class="ring-caption">VM2 &middot; everyone else<br/>only sees changes that survived Pilot-Ring</div>
+    </div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 2 min.</p>
+    <p>This slide sets up the entire demo's payoff: "Watch the ring on the left take the hit, while the ring on the right never even notices."</p>
+  </aside>
+</section>
+
+<!-- 12. TIMELINE PREVIEW -->
+<section>
+  <div class="kicker"><span class="dot"></span>What we're about to watch</div>
+  <h2>The break-and-recover cycle, start to finish</h2>
+  <div class="timeline">
+    <div class="timeline-step">
+      <div class="t-label">t0</div>
+      <div class="timeline-devices">
+        <div class="device ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg></div>
+        <div class="device ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg></div>
+      </div>
+      <p>Both compliant</p>
+    </div>
+    <div class="timeline-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg><span>bad policy applied</span></div>
+    <div class="timeline-step">
+      <div class="t-label">t1 &middot; ~2.5 min</div>
+      <div class="timeline-devices">
+        <div class="device bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg></div>
+        <div class="device ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg></div>
+      </div>
+      <p>VM1 noncompliant &middot; VM2 untouched</p>
+    </div>
+    <div class="timeline-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg><span>git revert + re-apply</span></div>
+    <div class="timeline-step">
+      <div class="t-label">t2 &middot; ~2.5 min</div>
+      <div class="timeline-devices">
+        <div class="device ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg></div>
+        <div class="device ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg></div>
+      </div>
+      <p>Both compliant again</p>
+    </div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 1–2 min. Show this right before switching to the terminal for the live demo — it's the map the audience will hold in their head while you work.</p>
+  </aside>
+</section>
+
+<!-- 13. DEMO TRANSITION -->
+<section class="statement-slide">
+  <div class="statement-kicker">Section 04</div>
+  <h1>LIVE <span class="glow">DEMO</span></h1>
+  <div class="sub">Real tenant. Real Windows 11 VMs. No mocks.</div>
+  <aside class="notes">
+    <p><b>Timing:</b> 15–20 min. This is where you switch away from slides entirely.</p>
+    <p><b>Full script:</b> run the exact sequence in <code>DEMO_SCRIPT.md</code> Acts 2–6 (guardrail demo &rarr; CI dry-run &rarr; the break &rarr; watch loop &rarr; the revert). Pre-show checklist (fresh Graph token, VMs started, baseline clean) must already be done before this slide — see DEMO_SCRIPT.md "Pre-show checklist."</p>
+    <p>Talking point while commands run: "I just pushed this the same way I'd push a bad Deployment manifest to Kubernetes — let's watch it actually break a real laptop."</p>
+    <p>If a Graph token expires mid-demo, that's normal on a long session — re-mint it per the pre-show checklist, don't treat it as a failure.</p>
+  </aside>
+</section>
+
+<!-- 14. SECTION: WHAT JUST HAPPENED -->
+<section class="section-divider">
+  <div class="big-number">05</div>
+  <div class="kicker"><span class="dot"></span>Debrief</div>
+  <h2>What Just Happened</h2>
+  <div class="sub">Translating what you just watched on screen back into GitOps language.</div>
+  <aside class="notes">
+    <p><b>Timing:</b> 30 sec transition back from the terminal to slides.</p>
+  </aside>
+</section>
+
+<!-- 15. STAT CALLOUT -->
+<section>
+  <div class="kicker"><span class="dot"></span>The numbers</div>
+  <h2>Real timings, from the demo you just saw</h2>
+  <div class="stat-grid">
+    <div class="stat-card amber"><div class="stat-value">~2.5 min</div><div class="stat-label">time to detect the break</div></div>
+    <div class="stat-card green"><div class="stat-value">~2.5 min</div><div class="stat-label">time to recover after revert</div></div>
+    <div class="stat-card blue"><div class="stat-value">0</div><div class="stat-label">Prod-Ring devices affected</div></div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 1–2 min.</p>
+    <p>Emphasize "0" is the headline number: the entire point of the ring model is that this number stays zero no matter how bad the Pilot-Ring mistake is.</p>
+  </aside>
+</section>
+
+<!-- 16. THE DHA CATCH -->
+<section>
+  <div class="kicker"><span class="dot"></span>The gotcha</div>
+  <h2>The catch nobody warns you about</h2>
+  <div class="lane-wrap">
+    <div class="lane fast">
+      <div class="lane-icon i-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+      <div><h4>MDM sync channel &mdash; minutes</h4><p>osMinimumVersion, most settings &mdash; reports back on the regular device check-in. This is the lever we used live.</p></div>
+    </div>
+    <div class="lane slow">
+      <div class="lane-icon i-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20L12 3z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg></div>
+      <div><h4>Device Health Attestation &mdash; hours</h4><p>BitLocker, Secure Boot, Code Integrity &mdash; graded by an async cloud attestation pipeline, fully decoupled from the sync channel above.</p></div>
+    </div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 2–3 min. This is the "war story" slide — the thing that took multiple debugging sessions to root-cause.</p>
+    <p>Tell it as a story: "We originally tried to demo this live with BitLocker. It took us several sessions to figure out why the device just never came back to compliant — turns out it wasn't broken, it was just on a reporting channel that can take hours." This is the kind of detail that makes a talk memorable.</p>
+  </aside>
+</section>
+
+<!-- 17. THREE LESSONS -->
+<section>
+  <div class="kicker"><span class="dot"></span>Takeaways</div>
+  <h2>3 lessons from running this for real</h2>
+  <div class="card-grid-3">
+    <div class="card good">
+      <div class="icon i-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <h4>Guardrails catch mistakes early</h4>
+      <p>A bad shape never reaches the tenant — caught before CI even runs.</p>
+    </div>
+    <div class="card good">
+      <div class="icon i-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg></div>
+      <h4>Rings contain blast radius</h4>
+      <p>Canary-style assignment means one bad rollout affects one ring, not the fleet.</p>
+    </div>
+    <div class="card warn">
+      <div class="icon i-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
+      <h4>Know your signal latency</h4>
+      <p>Not every setting reports instantly — async attestation pipelines need a different playbook.</p>
+    </div>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> 2 min.</p>
+    <p>This is the slide people screenshot. Say each lesson slowly and let it land before moving to closing.</p>
+  </aside>
+</section>
+
+<!-- 18. CLOSING -->
+<section class="closing-slide">
+  <h1>Thank You</h1>
+  <p style="font-size:0.9em;">Questions? Let's talk GitOps, Intune, or both.</p>
+  <div class="contact-row">
+    <span class="contact-chip">abhinav@kodekloud.com</span>
+    <span class="contact-chip">github.com/abhi-bhatra</span>
+    <span class="contact-chip">linkedin.com/in/abhinavsharma0</span>
+  </div>
+  <aside class="notes">
+    <p><b>Timing:</b> remaining time for Q&amp;A.</p>
+    <p>If the organizers want a feedback QR code, add it as an &lt;img&gt; here.</p>
+    <p>Likely audience questions to prepare for: "Does this work for macOS/Jamf too?" (different MDM, same pattern) · "What about Autopilot/enrollment itself as code?" (out of scope for this talk, but a natural next step) · "Why not just use Intune's built-in versioning?" (no policy-as-code admission control, no plan step, no git history tied to org's existing review process).</p>
+  </aside>
+</section>
+
+</div>
+</div>
+
+<script src="vendor/reveal.js/dist/reveal.js"></script>
+<script src="vendor/reveal.js/dist/plugin/notes/notes.js"></script>
+<script src="vendor/reveal.js/dist/plugin/highlight/highlight.js"></script>
+<script src="vendor/reveal.js/dist/plugin/zoom/zoom.js"></script>
+<script>
+  Reveal.initialize({
+    width: 1280,
+    height: 720,
+    margin: 0,
+    minScale: 0.2,
+    maxScale: 2.0,
+    hash: true,
+    controls: true,
+    progress: true,
+    center: false,
+    transition: 'fade',
+    transitionSpeed: 'fast',
+    plugins: [ RevealNotes, RevealHighlight, RevealZoom ]
+  });
+</script>
+</body>
+</html>

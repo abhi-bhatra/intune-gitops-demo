@@ -24,11 +24,11 @@ def rule(description):
     return wrap
 
 
-@rule("BitLocker must not be disabled on any Windows compliance policy")
-def no_disabling_bitlocker(doc, path):
+@rule("Windows compliance policies must enforce a minimum OS build")
+def must_enforce_os_minimum_version(doc, path):
     if doc.get("@odata.type") == "#microsoft.graph.windows10CompliancePolicy":
-        if doc.get("bitLockerEnabled") is False:
-            return f"{path}: bitLockerEnabled is explicitly false"
+        if not doc.get("osMinimumVersion"):
+            return f"{path}: osMinimumVersion is not set - devices on any build would pass"
     return None
 
 

@@ -15,6 +15,7 @@
 
 <!-- 1. TITLE -->
 <section class="title-slide">
+  <div class="slide-body">
   <div class="brand">Workplace Ninjas India 2026</div>
   <h1>Intune Meets GitOps</h1>
   <div class="subtitle">Managing Windows Device Policy as Code</div>
@@ -28,15 +29,18 @@
     <span>Abhinav Sharma &middot; MVP &amp; Sr. Platform Engineer, KodeKloud</span>
     <span>Workplace Ninjas India 2026 &middot; 27&ndash;28 Nov 2026</span>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 1–2 min. This is the only slide where you talk before touching anything technical.</p>
     <p><b>Open with energy, not a bio.</b> Something like: "Everything you'll see in the next hour is real. Real Microsoft 365 tenant, real enrolled Windows 11 laptops, real policy changes. No slideware, no mocked API responses."</p>
     <p><b>One-line promise:</b> "By the end of this talk you'll watch a bad policy change break a real Windows laptop live on stage — and watch git fix it."</p>
   </aside>
+
 </section>
 
 <!-- 2. SPEAKER -->
-<section>
+<section class="speaker-slide">
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>Who's talking</div>
   <div class="cols-2-uneven">
     <div>
@@ -51,17 +55,20 @@
       </div>
     </div>
     <div class="avatar-ring">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+      <span class="avatar-initials">AS</span>
     </div>
+  </div>
   </div>
   <aside class="notes">
     <p><b>Timing:</b> 1 min. Keep this tight — the audience wants the demo, not your résumé.</p>
-    <p>Swap the avatar placeholder for a real headshot if you have one (replace the SVG block with an &lt;img&gt;).</p>
+    <p>Swap the avatar placeholder for a real headshot if you have one (replace the .avatar-ring block with an &lt;img&gt;).</p>
   </aside>
+
 </section>
 
 <!-- 3. AGENDA -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>Agenda</div>
   <h2>What we're covering</h2>
   <div class="agenda-list">
@@ -71,25 +78,31 @@
     <div class="agenda-item"><div class="agenda-num">4</div><div><h4>Live Demo</h4><span>Break a real policy, watch it fail, git revert, watch it heal</span></div></div>
     <div class="agenda-item"><div class="agenda-num">5</div><div><h4>Lessons Learned</h4><span>What running this for real actually taught us</span></div></div>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 1–2 min.</p>
     <p>Set expectations: "This talk has one live demo, around 15–20 minutes long, against a real tenant. If something takes 2–3 minutes to propagate on stage, that's expected — I'll explain why while we wait."</p>
   </aside>
+
 </section>
 
 <!-- 4. SECTION: THE PROBLEM -->
 <section class="section-divider">
+  <div class="slide-body">
   <div class="big-number">01</div>
   <div class="kicker"><span class="dot"></span>Section 01</div>
   <h2>The Problem</h2>
   <div class="sub">How Windows device policy gets managed today — and why it doesn't scale past a handful of laptops.</div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 30 sec transition slide. Let it breathe, don't rush into the next slide.</p>
   </aside>
+
 </section>
 
 <!-- 5. PROBLEM DETAIL -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>The problem</div>
   <h2>Sound familiar?</h2>
   <div class="card-grid-2">
@@ -114,25 +127,31 @@
       <p>The only undo button is someone remembering exactly what the settings used to be.</p>
     </div>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 2–3 min.</p>
     <p>Anchor each card in something the audience has felt in a Kubernetes/infra context — manual kubectl edits in prod, no PR review, no `kubectl diff`. The point: Windows fleet management today is where infra was before IaC.</p>
   </aside>
+
 </section>
 
 <!-- 6. SECTION: ENTER GITOPS -->
 <section class="section-divider">
+  <div class="slide-body">
   <div class="big-number">02</div>
   <div class="kicker"><span class="dot"></span>Section 02</div>
   <h2>Enter GitOps for Windows</h2>
   <div class="sub">The same workflow you already trust for Kubernetes — applied to Intune device policy instead of pods.</div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 30 sec transition.</p>
   </aside>
+
 </section>
 
 <!-- 7. CONCEPT MAPPING -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>Same idea, new domain</div>
   <h2>If you know GitOps, you already know this</h2>
   <div class="map-table">
@@ -144,14 +163,17 @@
     <div class="map-row"><div class="map-cell k8s">Canary rollout</div><div class="map-arrow">&#8594;</div><div class="map-cell intune">Pilot-Ring assignment</div></div>
     <div class="map-row"><div class="map-cell k8s">kubectl rollout undo</div><div class="map-arrow">&#8594;</div><div class="map-cell intune">git revert + re-apply</div></div>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 2 min. This is the slide that makes K8s/DevOps engineers lean forward.</p>
     <p>Say explicitly: "I'm not stretching an analogy here — the architecture is the same loop: declare, validate, apply, observe, revert."</p>
   </aside>
+
 </section>
 
 <!-- 8. PIPELINE DIAGRAM -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>The pipeline</div>
   <h2>Git commit to device compliance, in 5 steps</h2>
   <div class="pipeline">
@@ -185,14 +207,17 @@
       <p>Compliant / noncompliant status flows back from the real device</p>
     </div>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 2–3 min. This is the backbone diagram — refer back to it mentally during the whole demo.</p>
     <p>Point out step 2 explicitly: the guardrail never talks to the tenant. It's a pure local check, same mental model as an admission controller.</p>
   </aside>
+
 </section>
 
 <!-- 9. CODE SLIDE -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>Show me the code</div>
   <h2>The guardrail, in ~10 lines of Python</h2>
   <div class="terminal-window">
@@ -209,25 +234,31 @@ def must_enforce_os_minimum_version(doc, path):
             return f"{path}: osMinimumVersion not set"
     return None</code></pre>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 2 min.</p>
     <p>Live-code moment (optional): actually run <code>python3 guardrails/validate_policy.py intune</code> in a terminal here instead of just showing the slide, to prove it's real. Full command sequence for this is in DEMO_SCRIPT.md, Act 2.</p>
   </aside>
+
 </section>
 
 <!-- 10. SECTION: RINGS -->
 <section class="section-divider">
+  <div class="slide-body">
   <div class="big-number">03</div>
   <div class="kicker"><span class="dot"></span>Section 03</div>
   <h2>Meet the Fleet: Rings</h2>
   <div class="sub">Two Windows 11 VMs, two rings — the canary deployment pattern, applied to laptops instead of pods.</div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 30 sec transition.</p>
   </aside>
+
 </section>
 
 <!-- 11. RING DIAGRAM -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>Blast-radius containment</div>
   <h2>Pilot-Ring takes the risk first</h2>
   <div class="ring-wrap">
@@ -246,14 +277,17 @@ def must_enforce_os_minimum_version(doc, path):
       <div class="ring-caption">VM2 &middot; everyone else<br/>only sees changes that survived Pilot-Ring</div>
     </div>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 2 min.</p>
     <p>This slide sets up the entire demo's payoff: "Watch the ring on the left take the hit, while the ring on the right never even notices."</p>
   </aside>
+
 </section>
 
 <!-- 12. TIMELINE PREVIEW -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>What we're about to watch</div>
   <h2>The break-and-recover cycle, start to finish</h2>
   <div class="timeline">
@@ -284,37 +318,46 @@ def must_enforce_os_minimum_version(doc, path):
       <p>Both compliant again</p>
     </div>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 1–2 min. Show this right before switching to the terminal for the live demo — it's the map the audience will hold in their head while you work.</p>
   </aside>
+
 </section>
 
 <!-- 13. DEMO TRANSITION -->
 <section class="statement-slide">
+  <div class="slide-body">
   <div class="statement-kicker">Section 04</div>
   <h1>LIVE <span class="glow">DEMO</span></h1>
   <div class="sub">Real tenant. Real Windows 11 VMs. No mocks.</div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 15–20 min. This is where you switch away from slides entirely.</p>
     <p><b>Full script:</b> run the exact sequence in <code>DEMO_SCRIPT.md</code> Acts 2–6 (guardrail demo &rarr; CI dry-run &rarr; the break &rarr; watch loop &rarr; the revert). Pre-show checklist (fresh Graph token, VMs started, baseline clean) must already be done before this slide — see DEMO_SCRIPT.md "Pre-show checklist."</p>
     <p>Talking point while commands run: "I just pushed this the same way I'd push a bad Deployment manifest to Kubernetes — let's watch it actually break a real laptop."</p>
     <p>If a Graph token expires mid-demo, that's normal on a long session — re-mint it per the pre-show checklist, don't treat it as a failure.</p>
   </aside>
+
 </section>
 
 <!-- 14. SECTION: WHAT JUST HAPPENED -->
 <section class="section-divider">
+  <div class="slide-body">
   <div class="big-number">05</div>
   <div class="kicker"><span class="dot"></span>Debrief</div>
   <h2>What Just Happened</h2>
   <div class="sub">Translating what you just watched on screen back into GitOps language.</div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 30 sec transition back from the terminal to slides.</p>
   </aside>
+
 </section>
 
 <!-- 15. STAT CALLOUT -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>The numbers</div>
   <h2>Real timings, from the demo you just saw</h2>
   <div class="stat-grid">
@@ -322,14 +365,17 @@ def must_enforce_os_minimum_version(doc, path):
     <div class="stat-card green"><div class="stat-value">~2.5 min</div><div class="stat-label">time to recover after revert</div></div>
     <div class="stat-card blue"><div class="stat-value">0</div><div class="stat-label">Prod-Ring devices affected</div></div>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 1–2 min.</p>
     <p>Emphasize "0" is the headline number: the entire point of the ring model is that this number stays zero no matter how bad the Pilot-Ring mistake is.</p>
   </aside>
+
 </section>
 
 <!-- 16. THE DHA CATCH -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>The gotcha</div>
   <h2>The catch nobody warns you about</h2>
   <div class="lane-wrap">
@@ -342,14 +388,17 @@ def must_enforce_os_minimum_version(doc, path):
       <div><h4>Device Health Attestation &mdash; hours</h4><p>BitLocker, Secure Boot, Code Integrity &mdash; graded by an async cloud attestation pipeline, fully decoupled from the sync channel above.</p></div>
     </div>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 2–3 min. This is the "war story" slide — the thing that took multiple debugging sessions to root-cause.</p>
     <p>Tell it as a story: "We originally tried to demo this live with BitLocker. It took us several sessions to figure out why the device just never came back to compliant — turns out it wasn't broken, it was just on a reporting channel that can take hours." This is the kind of detail that makes a talk memorable.</p>
   </aside>
+
 </section>
 
 <!-- 17. THREE LESSONS -->
 <section>
+  <div class="slide-body">
   <div class="kicker"><span class="dot"></span>Takeaways</div>
   <h2>3 lessons from running this for real</h2>
   <div class="card-grid-3">
@@ -369,14 +418,17 @@ def must_enforce_os_minimum_version(doc, path):
       <p>Not every setting reports instantly — async attestation pipelines need a different playbook.</p>
     </div>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> 2 min.</p>
     <p>This is the slide people screenshot. Say each lesson slowly and let it land before moving to closing.</p>
   </aside>
+
 </section>
 
 <!-- 18. CLOSING -->
 <section class="closing-slide">
+  <div class="slide-body">
   <h1>Thank You</h1>
   <p style="font-size:0.9em;">Questions? Let's talk GitOps, Intune, or both.</p>
   <div class="contact-row">
@@ -384,11 +436,13 @@ def must_enforce_os_minimum_version(doc, path):
     <span class="contact-chip">github.com/abhi-bhatra</span>
     <span class="contact-chip">linkedin.com/in/abhinavsharma0</span>
   </div>
+  </div>
   <aside class="notes">
     <p><b>Timing:</b> remaining time for Q&amp;A.</p>
     <p>If the organizers want a feedback QR code, add it as an &lt;img&gt; here.</p>
     <p>Likely audience questions to prepare for: "Does this work for macOS/Jamf too?" (different MDM, same pattern) · "What about Autopilot/enrollment itself as code?" (out of scope for this talk, but a natural next step) · "Why not just use Intune's built-in versioning?" (no policy-as-code admission control, no plan step, no git history tied to org's existing review process).</p>
   </aside>
+
 </section>
 
 </div>
@@ -408,6 +462,7 @@ def must_enforce_os_minimum_version(doc, path):
     hash: true,
     controls: true,
     progress: true,
+    slideNumber: 'c/t',
     center: false,
     transition: 'fade',
     transitionSpeed: 'fast',

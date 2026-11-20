@@ -62,9 +62,13 @@ az account set --subscription 0ba13b43-2636-491a-9c51-8f1d4474cbbb
    Should be clean, HEAD at the commit that scopes the policy to
    `osMinimumVersion` only (no pending demo branch merged in).
 3. Mint a fresh Graph access token (tokens expire ~1hr; do this right before
-   going on stage, not 30 min before):
+   going on stage, not 30 min before). Always rotate a fresh client secret
+   first — don't rely on `$CLIENT_SECRET` surviving from a previous shell
+   session, and never recover an old one from history:
    ```bash
    az account set --subscription 71c4bcf1-4a96-4cba-b9b4-688a6f8d2860
+   CLIENT_SECRET=$(az ad app credential reset --id 7d1698e0-fc95-43bd-961f-93f77f744849 --query password -o tsv)
+
    TOKEN=$(curl -s -X POST \
      "https://login.microsoftonline.com/71c4bcf1-4a96-4cba-b9b4-688a6f8d2860/oauth2/v2.0/token" \
      -d "client_id=7d1698e0-fc95-43bd-961f-93f77f744849" \
@@ -72,9 +76,15 @@ az account set --subscription 0ba13b43-2636-491a-9c51-8f1d4474cbbb
      -d "client_secret=$CLIENT_SECRET" \
      -d "grant_type=client_credentials" | jq -r .access_token)
    ```
-   (If `$CLIENT_SECRET` isn't already in your shell env, rotate a fresh one —
-   never recover an old one from history — with
-   `az ad app credential reset --id 7d1698e0-fc95-43bd-961f-93f77f744849 --query password -o tsv`.)
+   Sanity-check the token before moving on — `TOKEN=null` means the secret
+   was empty/stale or the request was otherwise rejected:
+   ```bash
+   echo "token length: ${#TOKEN}"
+   ```
+   A real token is a few thousand characters. If `token length: 0` (or
+   `TOKEN` prints literally `null`), re-run the `jq -r .access_token` curl
+   above without the `-r .access_token` (i.e. just `| jq .`) to see the raw
+   Entra error body before retrying.
 4. Confirm both devices currently show `compliant`:
    ```bash
    for id in 8a527f1c-27b7-43eb-a697-ee26aa435666 a9e37cba-63c3-4090-b496-606f5fc6d360; do

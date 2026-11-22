@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Intune Meets GitOps — Managing Windows Device Policy as Code</title>
+<title>Intune Meets GitOps - Managing Windows Device Policy as Code</title>
 <link rel="stylesheet" href="vendor/reveal.js/dist/reset.css" />
 <link rel="stylesheet" href="vendor/reveal.js/dist/reveal.css" />
 <link rel="stylesheet" href="vendor/reveal.js/dist/plugin/highlight/monokai.css" />
@@ -31,9 +31,9 @@
   </div>
   </div>
   <aside class="notes">
-    <p><b>Timing:</b> 1–2 min. This is the only slide where you talk before touching anything technical.</p>
+    <p><b>Timing:</b> 1-2 min. This is the only slide where you talk before touching anything technical.</p>
     <p><b>Open with energy, not a bio.</b> Something like: "Everything you'll see in the next hour is real. Real Microsoft 365 tenant, real enrolled Windows 11 laptops, real policy changes. No slideware, no mocked API responses."</p>
-    <p><b>One-line promise:</b> "By the end of this talk you'll watch a bad policy change break a real Windows laptop live on stage — and watch git fix it."</p>
+    <p><b>One-line promise:</b> "By the end of this talk you'll watch a bad policy change break a real Windows laptop live on stage - and watch git fix it."</p>
   </aside>
 
 </section>
@@ -60,7 +60,7 @@
   </div>
   </div>
   <aside class="notes">
-    <p><b>Timing:</b> 1 min. Keep this tight — the audience wants the demo, not your résumé.</p>
+    <p><b>Timing:</b> 1 min. Keep this tight - the audience wants the demo, not your résumé.</p>
     <p>Swap the avatar placeholder for a real headshot if you have one (replace the .avatar-ring block with an &lt;img&gt;).</p>
   </aside>
 
@@ -80,8 +80,8 @@
   </div>
   </div>
   <aside class="notes">
-    <p><b>Timing:</b> 1–2 min.</p>
-    <p>Set expectations: "This talk has one live demo, around 15–20 minutes long, against a real tenant. If something takes 2–3 minutes to propagate on stage, that's expected — I'll explain why while we wait."</p>
+    <p><b>Timing:</b> 1-2 min.</p>
+    <p>Set expectations: "This talk has one live demo, around 15-20 minutes long, against a real tenant. If something takes 2-3 minutes to propagate on stage, that's expected - I'll explain why while we wait."</p>
   </aside>
 
 </section>
@@ -92,7 +92,7 @@
   <div class="big-number">01</div>
   <div class="kicker"><span class="dot"></span>Section 01</div>
   <h2>The Problem</h2>
-  <div class="sub">How Windows device policy gets managed today — and why it doesn't scale past a handful of laptops.</div>
+  <div class="sub">How Windows device policy gets managed today - and why it doesn't scale past a handful of laptops.</div>
   </div>
   <aside class="notes">
     <p><b>Timing:</b> 30 sec transition slide. Let it breathe, don't rush into the next slide.</p>
@@ -109,7 +109,7 @@
     <div class="card danger">
       <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 21h20L12 3z"/><line x1="12" y1="9" x2="12" y2="14"/><circle cx="12" cy="17" r="1" fill="currentColor" stroke="none"/></svg></div>
       <h4>Silent fleet-wide mistakes</h4>
-      <p>One wrong click in the Intune portal can disable BitLocker or block USB storage for every enrolled device — instantly, with no review.</p>
+      <p>One wrong click in the Intune portal can disable BitLocker or block USB storage for every enrolled device - instantly, with no review.</p>
     </div>
     <div class="card danger">
       <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
@@ -119,7 +119,7 @@
     <div class="card danger">
       <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="16" rx="1"/><rect x="14" y="4" width="7" height="16" rx="1"/></svg></div>
       <h4>No diff before it ships</h4>
-      <p>There's no "plan" step — you find out what changed by watching devices break, not by reading a diff first.</p>
+      <p>There's no "plan" step - you find out what changed by watching devices break, not by reading a diff first.</p>
     </div>
     <div class="card danger">
       <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
@@ -129,8 +129,8 @@
   </div>
   </div>
   <aside class="notes">
-    <p><b>Timing:</b> 2–3 min.</p>
-    <p>Anchor each card in something the audience has felt in a Kubernetes/infra context — manual kubectl edits in prod, no PR review, no `kubectl diff`. The point: Windows fleet management today is where infra was before IaC.</p>
+    <p><b>Timing:</b> 2-3 min.</p>
+    <p>Anchor each card in something the audience has felt in a Kubernetes/infra context - manual kubectl edits in prod, no PR review, no `kubectl diff`. The point: Windows fleet management today is where infra was before IaC.</p>
   </aside>
 
 </section>
@@ -141,7 +141,7 @@
   <div class="big-number">02</div>
   <div class="kicker"><span class="dot"></span>Section 02</div>
   <h2>Enter GitOps for Windows</h2>
-  <div class="sub">The same workflow you already trust for Kubernetes — applied to Intune device policy instead of pods.</div>
+  <div class="sub">The same workflow you already trust for Kubernetes - applied to Intune device policy instead of pods.</div>
   </div>
   <aside class="notes">
     <p><b>Timing:</b> 30 sec transition.</p>
@@ -166,7 +166,7 @@
   </div>
   <aside class="notes">
     <p><b>Timing:</b> 2 min. This is the slide that makes K8s/DevOps engineers lean forward.</p>
-    <p>Say explicitly: "I'm not stretching an analogy here — the architecture is the same loop: declare, validate, apply, observe, revert."</p>
+    <p>Say explicitly: "I'm not stretching an analogy here - the architecture is the same loop: declare, validate, apply, observe, revert."</p>
   </aside>
 
 </section>
@@ -186,13 +186,13 @@
     <div class="pipeline-node">
       <div class="node-circle i-cyan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
       <h4>Guardrail</h4>
-      <p>Policy-as-code check, local — rejects bad shapes before CI starts</p>
+      <p>Policy-as-code check, local - rejects bad shapes before CI starts</p>
     </div>
     <div class="pipeline-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg></div>
     <div class="pipeline-node">
       <div class="node-circle i-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="16" rx="1"/><rect x="14" y="4" width="7" height="16" rx="1"/></svg></div>
       <h4>CI Plan</h4>
-      <p>IntuneCD dry-run diffs against the live tenant — no writes yet</p>
+      <p>IntuneCD dry-run diffs against the live tenant - no writes yet</p>
     </div>
     <div class="pipeline-arrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="20" y2="12"/><polyline points="13 5 20 12 13 19"/></svg></div>
     <div class="pipeline-node">
@@ -209,7 +209,7 @@
   </div>
   </div>
   <aside class="notes">
-    <p><b>Timing:</b> 2–3 min. This is the backbone diagram — refer back to it mentally during the whole demo.</p>
+    <p><b>Timing:</b> 2-3 min. This is the backbone diagram - refer back to it mentally during the whole demo.</p>
     <p>Point out step 2 explicitly: the guardrail never talks to the tenant. It's a pure local check, same mental model as an admission controller.</p>
   </aside>
 
@@ -248,7 +248,7 @@ def must_enforce_os_minimum_version(doc, path):
   <div class="big-number">03</div>
   <div class="kicker"><span class="dot"></span>Section 03</div>
   <h2>Meet the Fleet: Rings</h2>
-  <div class="sub">Two Windows 11 VMs, two rings — the canary deployment pattern, applied to laptops instead of pods.</div>
+  <div class="sub">Two Windows 11 VMs, two rings - the canary deployment pattern, applied to laptops instead of pods.</div>
   </div>
   <aside class="notes">
     <p><b>Timing:</b> 30 sec transition.</p>
@@ -320,7 +320,7 @@ def must_enforce_os_minimum_version(doc, path):
   </div>
   </div>
   <aside class="notes">
-    <p><b>Timing:</b> 1–2 min. Show this right before switching to the terminal for the live demo — it's the map the audience will hold in their head while you work.</p>
+    <p><b>Timing:</b> 1-2 min. Show this right before switching to the terminal for the live demo - it's the map the audience will hold in their head while you work.</p>
   </aside>
 
 </section>
@@ -333,10 +333,10 @@ def must_enforce_os_minimum_version(doc, path):
   <div class="sub">Real tenant. Real Windows 11 VMs. No mocks.</div>
   </div>
   <aside class="notes">
-    <p><b>Timing:</b> 15–20 min. This is where you switch away from slides entirely.</p>
-    <p><b>Full script:</b> run the exact sequence in <code>DEMO_SCRIPT.md</code> Acts 2–6 (guardrail demo &rarr; CI dry-run &rarr; the break &rarr; watch loop &rarr; the revert). Pre-show checklist (fresh Graph token, VMs started, baseline clean) must already be done before this slide — see DEMO_SCRIPT.md "Pre-show checklist."</p>
-    <p>Talking point while commands run: "I just pushed this the same way I'd push a bad Deployment manifest to Kubernetes — let's watch it actually break a real laptop."</p>
-    <p>If a Graph token expires mid-demo, that's normal on a long session — re-mint it per the pre-show checklist, don't treat it as a failure.</p>
+    <p><b>Timing:</b> 15-20 min. This is where you switch away from slides entirely.</p>
+    <p><b>Full script:</b> run the exact sequence in <code>DEMO_SCRIPT.md</code> Acts 2-6 (guardrail demo &rarr; CI dry-run &rarr; the break &rarr; watch loop &rarr; the revert). Pre-show checklist (fresh Graph token, VMs started, baseline clean) must already be done before this slide - see DEMO_SCRIPT.md "Pre-show checklist."</p>
+    <p>Talking point while commands run: "I just pushed this the same way I'd push a bad Deployment manifest to Kubernetes - let's watch it actually break a real laptop."</p>
+    <p>If a Graph token expires mid-demo, that's normal on a long session - re-mint it per the pre-show checklist, don't treat it as a failure.</p>
   </aside>
 
 </section>
@@ -367,7 +367,7 @@ def must_enforce_os_minimum_version(doc, path):
   </div>
   </div>
   <aside class="notes">
-    <p><b>Timing:</b> 1–2 min.</p>
+    <p><b>Timing:</b> 1-2 min.</p>
     <p>Emphasize "0" is the headline number: the entire point of the ring model is that this number stays zero no matter how bad the Pilot-Ring mistake is.</p>
   </aside>
 
@@ -390,8 +390,8 @@ def must_enforce_os_minimum_version(doc, path):
   </div>
   </div>
   <aside class="notes">
-    <p><b>Timing:</b> 2–3 min. This is the "war story" slide — the thing that took multiple debugging sessions to root-cause.</p>
-    <p>Tell it as a story: "We originally tried to demo this live with BitLocker. It took us several sessions to figure out why the device just never came back to compliant — turns out it wasn't broken, it was just on a reporting channel that can take hours." This is the kind of detail that makes a talk memorable.</p>
+    <p><b>Timing:</b> 2-3 min. This is the "war story" slide - the thing that took multiple debugging sessions to root-cause.</p>
+    <p>Tell it as a story: "We originally tried to demo this live with BitLocker. It took us several sessions to figure out why the device just never came back to compliant - turns out it wasn't broken, it was just on a reporting channel that can take hours." This is the kind of detail that makes a talk memorable.</p>
   </aside>
 
 </section>
@@ -405,7 +405,7 @@ def must_enforce_os_minimum_version(doc, path):
     <div class="card good">
       <div class="icon i-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 5-3.5 8.5-7 10-3.5-1.5-7-5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
       <h4>Guardrails catch mistakes early</h4>
-      <p>A bad shape never reaches the tenant — caught before CI even runs.</p>
+      <p>A bad shape never reaches the tenant - caught before CI even runs.</p>
     </div>
     <div class="card good">
       <div class="icon i-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 12h6M12 9v6"/></svg></div>
@@ -415,7 +415,7 @@ def must_enforce_os_minimum_version(doc, path):
     <div class="card warn">
       <div class="icon i-amber"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></div>
       <h4>Know your signal latency</h4>
-      <p>Not every setting reports instantly — async attestation pipelines need a different playbook.</p>
+      <p>Not every setting reports instantly - async attestation pipelines need a different playbook.</p>
     </div>
   </div>
   </div>
@@ -432,7 +432,6 @@ def must_enforce_os_minimum_version(doc, path):
   <h1>Thank You</h1>
   <p style="font-size:0.9em;">Questions? Let's talk GitOps, Intune, or both.</p>
   <div class="contact-row">
-    <span class="contact-chip">abhinav@kodekloud.com</span>
     <span class="contact-chip">github.com/abhi-bhatra</span>
     <span class="contact-chip">linkedin.com/in/abhinavsharma0</span>
   </div>

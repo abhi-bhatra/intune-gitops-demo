@@ -36,6 +36,7 @@
 .reveal {
   font-family: var(--font-sans);
   color: var(--text);
+  font-size: 22pt; /* default reveal.js base is 20pt; bumped ~10% deck-wide for room/projector readability */
 }
 
 .reveal .slides {
@@ -242,9 +243,9 @@
 
 /* ---------- Agenda ---------- */
 
-.agenda-list { display: flex; flex-direction: column; gap: 18px; margin-top: 32px; }
+.agenda-list { display: flex; flex-direction: column; gap: 12px; margin-top: 22px; }
 
-.agenda-item { display: flex; align-items: center; gap: 22px; padding: 18px 24px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-panel); }
+.agenda-item { display: flex; align-items: center; gap: 22px; padding: 12px 22px; border-radius: 14px; border: 1px solid var(--border); background: var(--bg-panel); }
 
 .agenda-num {
   flex: none;

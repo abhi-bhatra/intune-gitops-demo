@@ -86,3 +86,9 @@ but-dormant; the demo runs the same commands manually. Device-side truth
   without per-command permission prompts — see
   `~/.claude/projects/-Users-abhinav-kodekloud/memory/feedback_intune_gitops_demo_autonomy.md`.
   This does not extend to any other repo/tenant.
+
+---
+### Stop servers
+az account set --subscription 0ba13b43-2636-491a-9c51-8f1d4474cbbb
+az vm deallocate -g RG-INTUNE-DEMO-VMS -n intune-demo-vm1
+az vm deallocate -g RG-INTUNE-DEMO-VMS -n intune-demo-vm2

@@ -194,7 +194,22 @@ IntuneCD-startupdate -m 1 -p ./intune -r -v -e ScopeTags Roles
    git checkout master && git merge demo/bad-os-minimum-version
    IntuneCD-startupdate -m 1 -p ./intune -v -g -e ScopeTags Roles
    ```
-4. Force an immediate device check-in so you don't wait for the natural cycle.
+   Watch the apply output — confirm it explicitly reports a change to
+   `GitOps-Demo-BitLocker-Required`, not "no changes detected."
+4. **Verify the value actually landed in the tenant before syncing/waiting** —
+   caught live on 2026-11-27: the apply silently didn't write through once,
+   leaving the tenant on an old `osMinimumVersion` (the same below-VM1's-build
+   value from an earlier rehearsal, see note above) while local git had already
+   moved on to `10.0.27000.0` — VM1 stayed `compliant` and the whole watch loop
+   was waiting on nothing:
+   ```bash
+   curl -s -H "Authorization: Bearer $TOKEN" \
+     "https://graph.microsoft.com/v1.0/deviceManagement/deviceCompliancePolicies/4f19c030-5ed2-467e-99b7-5bb729a39a26" | jq .osMinimumVersion
+   ```
+   Must read `"10.0.27000.0"` before moving to the next step. If it doesn't,
+   re-run the `IntuneCD-startupdate` apply above — don't fire `syncDevice` or
+   start the watch loop yet, you'll just be waiting on a no-op again.
+5. Force an immediate device check-in so you don't wait for the natural cycle.
    `-d ''` is required — without a body, curl sends no `Content-Length`
    header and Graph rejects the bodyless POST with `411 Length Required`:
    ```bash

@@ -1,0 +1,313 @@
+<!-- Quick-reference page content (wrapped in doc skeleton at publish time) -->
+<title>Q&A Field Guide</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+:root {
+  /* layout: pinned fallback bar + scrollable category list, single column, phone-first */
+  --bg: #0b1220;
+  --panel: #121b2e;
+  --panel-border: #22314d;
+  --text: #eef2fa;
+  --text-muted: #93a3c0;
+  --blue: #4f8dfd;
+  --cyan: #28c7d8;
+  --amber: #f5a623;
+  --red: #ef5a5a;
+  --green: #3ec98a;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f5f7fb;
+    --panel: #ffffff;
+    --panel-border: #dbe2ef;
+    --text: #141a2a;
+    --text-muted: #51607e;
+    --blue: #2563eb;
+    --cyan: #0891a8;
+    --amber: #b5750a;
+    --red: #c0392b;
+    --green: #198754;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f5f7fb;
+  --panel: #ffffff;
+  --panel-border: #dbe2ef;
+  --text: #141a2a;
+  --text-muted: #51607e;
+  --blue: #2563eb;
+  --cyan: #0891a8;
+  --amber: #b5750a;
+  --red: #c0392b;
+  --green: #198754;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", system-ui, sans-serif;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+h1 {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: clamp(1.4rem, 5vw, 1.9rem);
+  margin: 4px 0 2px;
+  letter-spacing: -0.01em;
+}
+.subhead {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 18px;
+}
+.fallback {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: linear-gradient(135deg, var(--blue), var(--cyan));
+  color: #06101f;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+}
+.fallback .label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-bottom: 4px;
+}
+.fallback .line {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.techniques {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr;
+  margin-bottom: 26px;
+}
+.technique {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+.technique b { color: var(--text); font-weight: 600; }
+
+.cat {
+  margin-top: 26px;
+}
+.cat-title {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--cyan);
+  margin-bottom: 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--panel-border);
+}
+
+.qa {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-left: 3px solid var(--blue);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.qa.honest { border-left-color: var(--amber); }
+.qa.bridge { border-left-color: var(--text-muted); }
+
+.q {
+  font-weight: 600;
+  font-size: 0.92rem;
+  margin-bottom: 6px;
+}
+.tag {
+  display: inline-block;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 5px;
+  margin-left: 6px;
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+.tag.confident { background: rgba(62,201,138,0.18); color: var(--green); }
+.tag.honest-gap { background: rgba(245,166,35,0.18); color: var(--amber); }
+.tag.bridge-away { background: rgba(147,163,192,0.18); color: var(--text-muted); }
+
+.a {
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+.a .say {
+  display: block;
+  margin-top: 6px;
+  color: var(--text);
+  font-style: italic;
+}
+.a .say::before { content: "\201C"; }
+.a .say::after { content: "\201D"; }
+
+footer {
+  margin-top: 30px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+}
+</style>
+
+<h1>Q&amp;A Field Guide</h1>
+<div class="subhead">Intune Meets GitOps — Workplace Ninjas India 2026</div>
+
+<div class="fallback">
+  <div class="label">When you genuinely don't know</div>
+  <div class="line">"I don't know that one precisely — let me get back to you after, rather than guess."</div>
+</div>
+
+<div class="techniques">
+  <div class="technique"><b>Repeat the question back</b> before answering — buys 3-4 seconds, confirms you understood, lets the back row hear it.</div>
+  <div class="technique"><b>Bridge on niche CSP/Graph trivia</b> — "that's slightly outside the delivery pipeline I focused on, happy to dig in after."</div>
+  <div class="technique"><b>Green tag</b> = answer with full confidence, it's real and verified. <b>Amber tag</b> = honest gap, say so proactively, it reads as credibility not weakness.</div>
+</div>
+
+<div class="cat">
+  <div class="cat-title">The one they'll definitely ask</div>
+
+  <div class="qa">
+    <div class="q">Doesn't Intune already have audit logs? <span class="tag confident">Confident</span></div>
+    <div class="a">Yes — and that's exactly the point to make yourself before they do.
+      <span class="say">Intune already has solid audit logs — you can see who clicked what, after the fact. The problem isn't that we lack logs; it's that they're reactive. No peer review before a change ships, no diff, no linked ticket for why, and no git revert when you need to undo fifteen settings in thirty seconds.</span>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Is this a new tool you built? <span class="tag confident">Confident</span></div>
+    <div class="a">No — say so upfront, it builds credibility with this crowd.
+      <span class="say">We didn't build a new tool. IntuneCD already does the heavy lifting and is a well-known community project. What we built is the pipeline around it — guardrails, rings, and a live demo of the whole loop, which almost nobody shows end to end.</span>
+    </div>
+  </div>
+</div>
+
+<div class="cat">
+  <div class="cat-title">Architecture &amp; security</div>
+
+  <div class="qa honest">
+    <div class="q">Is this OIDC / Workload Identity Federation? <span class="tag honest-gap">Honest gap</span></div>
+    <div class="a">No — static client secret, and that's fine to admit.
+      <span class="say">Today it's a rotated client secret, scoped to least-privilege Graph permissions, stored as a GitHub Actions secret — not hardcoded. OIDC federation is the obvious next hardening step.</span>
+    </div>
+  </div>
+
+  <div class="qa honest">
+    <div class="q">Do you have automated drift detection / auto-revert? <span class="tag honest-gap">Honest gap</span></div>
+    <div class="a">No — recovery is a human-triggered git revert, not a scheduled job.
+      <span class="say">Right now drift recovery is a human running git revert and re-applying — what you watched in Act 6. A scheduled drift-check job that pages someone is the natural next layer, not built yet.</span>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">What about Graph API rate limits (429s)? <span class="tag honest-gap">Honest gap</span></div>
+    <div class="a">Two devices in this demo never gets close to throttling — say that plainly.
+      <span class="say">At this demo's scale — two devices — we've never hit a 429. At fleet scale the answer is standard retry with exponential backoff; happy to point you at Microsoft's Graph throttling docs after.</span>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Is there an approval gate before promoting Pilot-Ring to Prod-Ring? <span class="tag honest-gap">Honest gap</span></div>
+    <div class="a">No auto-promotion exists — rings today are two separate, independently-assigned groups.
+      <span class="say">Today Pilot-Ring and Prod-Ring are just two separately-assigned groups — promotion is a deliberate second commit, not an automated gate with health checks. That gate is the natural next step.</span>
+    </div>
+  </div>
+</div>
+
+<div class="cat">
+  <div class="cat-title">Scope &amp; platform breadth</div>
+
+  <div class="qa bridge">
+    <div class="q">Does this work for macOS / Jamf too? <span class="tag bridge-away">Different stack</span></div>
+    <div class="a">Different MDM vendor, same pattern.
+      <span class="say">Different MDM, same underlying pattern — Jamf has its own API and its own community tooling equivalent to IntuneCD. The guardrail-plan-apply-ring shape transfers; the tool doesn't.</span>
+    </div>
+  </div>
+
+  <div class="qa bridge">
+    <div class="q">What about BYOD / MAM (app-only management)? <span class="tag bridge-away">Out of scope</span></div>
+    <div class="a">Different object model entirely — don't overclaim.
+      <span class="say">This demo is MDM, full device enrollment. MAM/BYOD is app-level only, different Graph objects, different policy shape — same GitOps principle would apply, haven't demoed it.</span>
+    </div>
+  </div>
+
+  <div class="qa bridge">
+    <div class="q">What about Autopilot / enrollment itself as code? <span class="tag bridge-away">Out of scope</span></div>
+    <div class="a">Deliberately out of scope tonight.
+      <span class="say">Out of scope for this talk, but a natural next step — Autopilot profiles are Graph objects too, the same pipeline shape would cover them.</span>
+    </div>
+  </div>
+
+  <div class="qa bridge">
+    <div class="q">What about co-management / ConfigMgr (SCCM)? <span class="tag bridge-away">Out of scope</span></div>
+    <div class="a">Real nuance exists, keep the answer short.
+      <span class="say">Co-managed workloads add another layer — some settings are still arbitrated by ConfigMgr until a workload is switched over. This demo assumes Intune owns compliance and configuration outright.</span>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Why not just use Intune's built-in policy versioning? <span class="tag confident">Confident</span></div>
+    <div class="a">It isn't policy-as-code — no admission control, no plan step, no tie to your org's existing review process.
+      <span class="say">Intune's version history shows you what changed inside the portal — it doesn't gate the change before it ships, doesn't run a guardrail check, and isn't tied to your org's existing PR review process the way git is.</span>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Do giant .intunewin app packages go in git too? <span class="tag confident">Confident</span></div>
+    <div class="a">No, deliberately.
+      <span class="say">No — those are multi-gigabyte binaries and belong in dedicated packaging/artifact storage. What's in git is exactly what's lightweight and text-based: compliance policies, configuration profiles, scripts.</span>
+    </div>
+  </div>
+</div>
+
+<div class="cat">
+  <div class="cat-title">Demo mechanics (if someone's paying close attention)</div>
+
+  <div class="qa">
+    <div class="q">Why run everything by hand instead of letting GitHub Actions trigger it live? <span class="tag confident">Confident</span></div>
+    <div class="a">Deliberate reliability choice — already flagged proactively in Act 1.
+      <span class="say">This exact sequence — guardrail, dry-run plan, apply via Graph — already runs as real GitHub Actions on every PR and merge to this repo. I'm running each step by hand on stage so a flaky venue network or a cold runner doesn't eat our time.</span>
+    </div>
+  </div>
+
+  <div class="qa">
+    <div class="q">Why does the portal show "compliant" when Graph just showed noncompliant? <span class="tag confident">Confident</span></div>
+    <div class="a">Known, expected lag — not a bug, reinforces your own thesis.
+      <span class="say">The portal's device dashboard runs on a separate, slower reporting pipeline. Graph API is the live ground truth — which is exactly why we query it directly instead of trusting a cached UI.</span>
+    </div>
+  </div>
+
+</div>
+
+<footer>Repeat the question. Green = confident. Amber = honest gap. Grey = bridge away.</footer>

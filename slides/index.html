@@ -55,13 +55,12 @@
       </div>
     </div>
     <div class="avatar-ring">
-      <span class="avatar-initials">AS</span>
+      <img src="assets/headshot.png" alt="Abhinav Sharma" class="avatar-photo" />
     </div>
   </div>
   </div>
   <aside class="notes">
     <p><b>Timing:</b> 1 min. Keep this tight - the audience wants the demo, not your résumé.</p>
-    <p>Swap the avatar placeholder for a real headshot if you have one (replace the .avatar-ring block with an &lt;img&gt;).</p>
   </aside>
 
 </section>
@@ -113,8 +112,8 @@
     </div>
     <div class="card danger">
       <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
-      <h4>No audit trail</h4>
-      <p>No record of who changed what, or why. "It worked yesterday" is not a root cause.</p>
+      <h4>Audit logs are a security camera, not a guardrail</h4>
+      <p>Intune does log who clicked what - after the fact. No diff, no linked ticket, no review before it ships, no "undo" - just raw property deltas and a timestamp to reconstruct from.</p>
     </div>
     <div class="card danger">
       <div class="icon i-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="7" height="16" rx="1"/><rect x="14" y="4" width="7" height="16" rx="1"/></svg></div>
@@ -237,7 +236,7 @@ def must_enforce_os_minimum_version(doc, path):
   </div>
   <aside class="notes">
     <p><b>Timing:</b> 2 min.</p>
-    <p>Live-code moment (optional): actually run <code>python3 guardrails/validate_policy.py intune</code> in a terminal here instead of just showing the slide, to prove it's real. Full command sequence for this is in DEMO_SCRIPT.md, Act 2.</p>
+    <p>Live-code moment (optional): actually run <code>python3 guardrails/validate_policy.py intune</code> in a terminal here instead of just showing the slide, to prove it's real. Full command sequence for this is in WALKTHROUGH.md, Act 2.</p>
   </aside>
 
 </section>
@@ -432,7 +431,7 @@ def must_enforce_os_minimum_version(doc, path):
   <h1>Thank You</h1>
   <p style="font-size:0.9em;">Questions? Let's talk GitOps, Intune, or both.</p>
   <div class="contact-row">
-    <span class="contact-chip">github.com/abhi-bhatra</span>
+    <a class="contact-chip" href="https://github.com/abhi-bhatra/intune-gitops-demo" target="_blank" rel="noopener">github.com/abhi-bhatra/intune-gitops-demo</a>
     <span class="contact-chip">linkedin.com/in/abhinavsharma0</span>
   </div>
   </div>
@@ -446,6 +445,8 @@ def must_enforce_os_minimum_version(doc, path):
 
 </div>
 </div>
+
+<button id="theme-toggle" type="button" title="Toggle light/dark theme (press L)">Light</button>
 
 <script src="vendor/reveal.js/dist/reveal.js"></script>
 <script src="vendor/reveal.js/dist/plugin/notes/notes.js"></script>
@@ -467,6 +468,47 @@ def must_enforce_os_minimum_version(doc, path):
     transitionSpeed: 'fast',
     plugins: [ RevealNotes, RevealHighlight, RevealZoom ]
   });
+
+  // Theme toggle - presenter-controlled (not OS/prefers-color-scheme),
+  // so it can be set to whatever the venue's actual projector renders
+  // best during tech-check. Defaults to dark on first load; remembers
+  // the choice per-browser via localStorage. Press L or click the
+  // corner switch; it never auto-switches on its own.
+  (function () {
+    var STORAGE_KEY = 'intune-gitops-theme';
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+
+    function currentTheme() {
+      return root.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+    }
+
+    function apply(theme) {
+      if (theme === 'light') {
+        root.setAttribute('data-theme', 'light');
+      } else {
+        root.removeAttribute('data-theme');
+      }
+      if (btn) btn.textContent = theme === 'light' ? 'Dark' : 'Light';
+    }
+
+    function toggle() {
+      var next = currentTheme() === 'light' ? 'dark' : 'light';
+      apply(next);
+      try { localStorage.setItem(STORAGE_KEY, next); } catch (e) {}
+    }
+
+    var saved = 'dark';
+    try { saved = localStorage.getItem(STORAGE_KEY) || 'dark'; } catch (e) {}
+    apply(saved);
+
+    if (btn) btn.addEventListener('click', toggle);
+    document.addEventListener('keydown', function (e) {
+      if ((e.key === 'l' || e.key === 'L') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+        toggle();
+      }
+    });
+  })();
 </script>
 </body>
 </html>

@@ -29,7 +29,7 @@ contains the blast radius so Prod-Ring never even notices.
 | VM2 — Prod-Ring | `intune-demo-vm2`, device id `a9e37cba-63c3-4090-b496-606f5fc6d360` |
 | VM1/VM2 Azure location | RG `RG-INTUNE-DEMO-VMS`, subscription `0ba13b43-2636-491a-9c51-8f1d4474cbbb` ("Visual Studio Enterprise Subscription") |
 | VM1 real OS build | `10.0.26200.9974` (Windows 11 Enterprise) |
-| Repo | `/Users/abhinav/kodekloud/intune-gitops-demo` (local git, **no remote** — CI/CD workflows exist but nothing auto-triggers; apply steps below are run manually to simulate what the pipeline would do on push) |
+| Repo | `/Users/abhinav/kodekloud/intune-gitops-demo`, pushed to `github.com/abhi-bhatra/intune-gitops-demo` with live `.github/workflows/ci-validate.yml` + `cd-apply.yml` — **deliberate choice: the stage demo still runs every step manually/local**, not by pushing and waiting on GitHub's runner, to avoid conference-wifi/runner-cold-start risk live on stage. Say this explicitly (see Act 1 talking point below) rather than let the audience assume the YAML is unused. |
 | Policy under demo | `intune/Compliance Policies/Policies/GitOps-Demo-BitLocker-Required.json` |
 | Guardrail script | `guardrails/validate_policy.py` |
 
@@ -120,6 +120,13 @@ az account set --subscription 0ba13b43-2636-491a-9c51-8f1d4474cbbb
 - Introduce the two rings: **Pilot-Ring** (VM1, canary) and **Prod-Ring**
   (VM2, everyone else) — same idea as a Kubernetes canary rollout. Show the
   `assignments` block in the policy JSON scoped to `Pilot-Ring` only.
+- **Pre-empt the "is this actually automated" question up front:** briefly
+  show `.github/workflows/ci-validate.yml` and `cd-apply.yml` in the repo —
+  "this exact sequence — guardrail, dry-run plan, apply via Graph — already
+  runs as real GitHub Actions on every PR and merge to this repo. For the
+  next few minutes on stage I'm running each step by hand so a flaky venue
+  network or a cold GitHub runner doesn't eat our time — the YAML you're
+  looking at is the real production path, not slideware."
 
 ## Act 2 — Guardrail demo (local, instant, no tenant contact)
 
